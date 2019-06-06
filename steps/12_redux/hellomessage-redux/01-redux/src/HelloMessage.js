@@ -1,28 +1,43 @@
-import React from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-import * as Actions from './actions';
+import * as Actions from "./actions";
 
 class HelloMessage extends React.Component {
   render() {
-    const { greeting, updateGreeting, resetGreeting } = this.props;
+    const { greeting, inputStyle, updateGreeting, resetGreeting } = this.props;
 
-    return <div>
-      <input onChange={event => updateGreeting(event.target.value)}
-             value={greeting}/>
-      <p>Hello, {greeting}</p>
-      <button
-        onClick={() => resetGreeting()}>
-        Clear
-      </button>
-    </div>;
+    return (
+      <div>
+        <input
+          style={{ backgroundColor: inputStyle }}
+          onChange={event => updateGreeting(event.target.value)}
+          value={greeting}
+        />
+        <p>
+          Hello, {greeting}, {inputStyle}
+        </p>
+        <button onClick={() => resetGreeting()}>Clear</button>
+      </div>
+    );
+  }
+
+  componentWillMount() {
+    console.log("componentWillMount ==> greeting:" + this.props.greeting);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log("shouldComponentUpdate ==> greeting:" + this.props.greeting);
+    console.log("nextProps:", nextProps, " nextState:", nextState);
+    return true;
   }
 }
 
 function mapStateToProps(state) {
   return {
-    greeting: state.greeting
+    greeting: state.greeting,
+    inputStyle: state.inputStyle
   };
 }
 
@@ -30,4 +45,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(Actions, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HelloMessage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HelloMessage);
